@@ -4,22 +4,29 @@ using UnityEngine;
 public class Raycast : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
-    [SerializeField] private Ray _ray;
-    public event Action<Cube> OnCubeHit;
+    [SerializeField] private InputHandler _inputHandler;
+    [SerializeField] private float _rayLength = 1000f;
+    public event Action<Cube> IsCubeHit;
 
-    private void Update()
+    private void OnEnable()
     {
-        _ray = _camera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+        _inputHandler.IsClicked += CheckHit;
+    }
 
-        if (Input.GetMouseButtonDown(0))
+    private void OnDisable()
+    {
+        _inputHandler.IsClicked -= CheckHit;
+    }
+
+    private void CheckHit()
+    {
+        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, _rayLength))
         {
-            if (Physics.Raycast(_ray, out hit, Mathf.Infinity))
+            if (hit.transform.gameObject.TryGetComponent(out Cube resourse))
             {
-                if (hit.transform.gameObject.TryGetComponent<Cube>(out Cube cube))
-                {
-                    OnCubeHit?.Invoke(cube);
-                }
+                IsCubeHit?.Invoke(resourse);
             }
         }
     }

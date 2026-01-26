@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class Exploader : MonoBehaviour
 {
-    [SerializeField] private float explosionForce;
-    [SerializeField] private float explosionRadius;
+    [SerializeField] private float _explosionForce;
+    [SerializeField] private float _explosionRadius;
+    [SerializeField] private float _upwardsModifier;
 
-    public void DoBlast(Rigidbody rb, Vector3 position)
+    public void DoBlast(Rigidbody rigidbody, Vector3 position)
     {
-        rb.AddExplosionForce(explosionForce, position, explosionRadius, 5f, ForceMode.Force);
+        rigidbody.AddExplosionForce(_explosionForce, position, _explosionRadius, _upwardsModifier, ForceMode.Force);
     }
 }
