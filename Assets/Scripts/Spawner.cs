@@ -10,9 +10,7 @@ public class Spawner : MonoBehaviour
     private int _maxSpawnValue = 100;
     private int _spawnScaler = 2;
 
-    public event Action<Cube[]> IsSpawned;
-
-    public void Spawn(Cube cube)
+    public Cube[] Spawn(Cube cube)
     {
         int needToSpawnValue = UnityEngine.Random.Range(_minSpawnValue, _maxSpawnValue + 1);
 
@@ -28,12 +26,13 @@ public class Spawner : MonoBehaviour
                 blowCubes[i] = newCube;
             }
 
-            IsSpawned?.Invoke(blowCubes);
             Debug.Log($"Создано {spawnValue} кубов с шансом последующийх спавнов {cube.SpawnChance / _spawnScaler}%!");
+            return blowCubes;
         }
         else
         {
             Debug.Log("Не заспавнило!");
+            return null;
         }
     }
 

@@ -8,34 +8,31 @@ public class CubeProcessor : MonoBehaviour
 
     private void OnEnable()
     {
-        _raycast.IsCubeHit += BeginSpawn;
-        _spawner.IsSpawned += DoBlowUp;
-        _raycast.IsCubeHit += BeginDelete;
+        _raycast.DetectedCube += Work;
     }
 
     private void OnDisable()
     {
-        _raycast.IsCubeHit -= BeginSpawn;
-        _spawner.IsSpawned -= DoBlowUp;
-        _raycast.IsCubeHit -= BeginDelete;
+        _raycast.DetectedCube -= Work;
+    }
+
+    private void Work(Cube cube)
+    {
+        DoBlowUp(_spawner.Spawn(cube));
+        _spawner.Delete(cube);
     }
 
     private void DoBlowUp(Cube[] cubes)
     {
+        if (cubes == null)
+        {
+            return;
+        }
+
         foreach (Cube cube in cubes)
         {
-            Rigidbody rigidbody = cube.GetComponent<Rigidbody>();
+            Rigidbody rigidbody = cube.Rigidbody;
             _exploader.DoBlast(rigidbody, cube.transform.position);
         }
-    }
-
-    private void BeginSpawn(Cube cube)
-    {
-        _spawner.Spawn(cube);
-    }
-
-    private void BeginDelete(Cube cube)
-    {
-        _spawner.Delete(cube);
     }
 }
