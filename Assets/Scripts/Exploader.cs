@@ -5,15 +5,18 @@ public class Exploader : MonoBehaviour
     [SerializeField] private float _explosionForce;
     [SerializeField] private float _explosionRadius;
     [SerializeField] private float _upwardsModifier;
+    private LayerMask _cubeLayer = 1 << 6;
 
-    public void DoSuccessSpawnBlast(Rigidbody rigidbody, Vector3 position)
+    public void DoSuccessSpawnBlast(Cube cube)
     {
-        rigidbody.AddExplosionForce(_explosionForce, position, _explosionRadius, _upwardsModifier, ForceMode.Force);
+        cube.Rigidbody.AddExplosionForce(_explosionForce, cube.transform.position, _explosionRadius, _upwardsModifier, ForceMode.Force);
     }
 
-    public void DoFailureSpawnBlast(Cube resource)
+    public void DoFailureSpawnBlast(Cube cube)
     {
-        Collider[] nearCubes = Physics.OverlapSphere(resource.transform.position, resource.ExplosionRadius);
+        Collider[] nearCubes = Physics.OverlapSphere(cube.transform.position, cube.ExplosionRadius, _cubeLayer);
+
+        Debug.Log("Прошел фейл, прокинулась сфера");
 
         for (int i = 0; i < nearCubes.Length; i++)
         {
@@ -21,11 +24,17 @@ public class Exploader : MonoBehaviour
 
             if (rigidbody != null)
             {
-                float fadingForce = (1 - Vector3.Distance(nearCubes[i].transform.position, resource.transform.position) / resource.ExplosionRadius) * resource.ExplosionForce;
-                rigidbody.AddExplosionForce(fadingForce, resource.transform.position, resource.ExplosionRadius);
+                float sqrDistance = (nearCubes[i].transform.position - cube.transform.position).sqrMagnitude;
+                float sqrRadius = cube.ExplosionRadius * cube.ExplosionRadius;
+                float fadingForce = (1 - sqrDistance / sqrRadius) * cube.ExplosionForce;
+
+                if (fadingForce < 0)
+                {
+                    return;
+                }
+
+                rigidbody.AddExplosionForce(fadingForce, cube.transform.position, cube.ExplosionRadius);
             }
         }
-
-        Debug.Log($"Произошел взрыв радиусом {resource.ExplosionRadius} юнитов и силой {resource.ExplosionForce} единиц!");
     }
 }

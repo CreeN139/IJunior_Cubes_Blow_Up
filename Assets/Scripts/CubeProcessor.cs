@@ -6,6 +6,9 @@ public class CubeProcessor : MonoBehaviour
     [SerializeField] private Exploader _exploader;
     [SerializeField] private Raycast _raycast;
 
+    private int _minSpawnValue = 0;
+    private int _maxSpawnValue = 100;
+
     private void OnEnable()
     {
         _raycast.DetectedCube += Work;
@@ -18,8 +21,18 @@ public class CubeProcessor : MonoBehaviour
 
     private void Work(Cube cube)
     {
-        DoBlowUp(_spawner.Spawn(cube), cube);
-        _spawner.Delete(cube);
+        int needToSpawnValue = Random.Range(_minSpawnValue, _maxSpawnValue + 1);
+
+        if (needToSpawnValue <= cube.SpawnChance)
+        {
+            DoBlowUp(_spawner.Spawn(cube), cube);
+            _spawner.Delete(cube);
+        }
+        else
+        {
+            DoBlowUp(null, cube);
+            _spawner.Delete(cube);
+        }
     }
 
     private void DoBlowUp(Cube[] cubes, Cube oldCube)
@@ -32,8 +45,7 @@ public class CubeProcessor : MonoBehaviour
         {
             foreach (Cube cube in cubes)
             {
-                Rigidbody rigidbody = cube.Rigidbody;
-                _exploader.DoSuccessSpawnBlast(rigidbody, cube.transform.position);
+                _exploader.DoSuccessSpawnBlast(cube);
             }
         }
     }
