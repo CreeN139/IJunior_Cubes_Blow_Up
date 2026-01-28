@@ -16,8 +16,6 @@ public class Exploader : MonoBehaviour
     {
         Collider[] nearCubes = Physics.OverlapSphere(cube.transform.position, cube.ExplosionRadius, _cubeLayer);
 
-        Debug.Log("Прошел фейл, прокинулась сфера");
-
         for (int i = 0; i < nearCubes.Length; i++)
         {
             Rigidbody rigidbody = nearCubes[i].attachedRigidbody;
