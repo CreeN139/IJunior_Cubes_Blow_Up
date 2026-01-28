@@ -9,6 +9,7 @@ public class Spawner : MonoBehaviour
     private int _minSpawnValue = 0;
     private int _maxSpawnValue = 100;
     private int _spawnScaler = 2;
+    private float _explosionScaler = 1.5f;
 
     public Cube[] Spawn(Cube cube)
     {
@@ -22,7 +23,7 @@ public class Spawner : MonoBehaviour
             for (int i = 0; i < spawnValue; i++)
             {
                 Cube newCube = Instantiate(cube);
-                newCube.Initialize(cube.transform.position, cube.transform.localScale / _scaleMultiplier, UnityEngine.Random.ColorHSV(), cube.SpawnChance / _spawnScaler);
+                newCube.Initialize(cube.transform.position, cube.transform.localScale / _scaleMultiplier, UnityEngine.Random.ColorHSV(), cube.SpawnChance / _spawnScaler, cube.ExplosionForce * _explosionScaler, cube.ExplosionRadius * _explosionScaler);
                 blowCubes[i] = newCube;
             }
 

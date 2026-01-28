@@ -896,7 +896,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Exploader
   _explosionForce: 50000
   _explosionRadius: 5
-  _upwardsModifier: 50000
+  _upwardsModifier: 5000
 --- !u!4 &1290312607
 Transform:
   m_ObjectHideFlags: 0

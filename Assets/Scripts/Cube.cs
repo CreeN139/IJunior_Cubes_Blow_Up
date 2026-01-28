@@ -8,6 +8,8 @@ public class Cube : MonoBehaviour
 
     public Rigidbody Rigidbody => _rigidbody;
     public int SpawnChance { get; private set; } = 100;
+    public float ExplosionForce { get; private set; } = 50000f;
+    public float ExplosionRadius { get; private set; } = 5f;
 
     private void Awake()
     {
@@ -15,11 +17,13 @@ public class Cube : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    public void Initialize(Vector3 position, Vector3 scale, Color color, int spawnChance)
+    public void Initialize(Vector3 position, Vector3 scale, Color color, int spawnChance, float explosionForce, float explosionRadius)
     {
         transform.position = position;
         transform.localScale = scale;
         _renderer.material.color = color;
         SpawnChance = spawnChance;
+        ExplosionForce = explosionForce;
+        ExplosionRadius = explosionRadius;
     }
 }
